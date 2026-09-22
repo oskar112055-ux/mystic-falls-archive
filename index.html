@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#08070b"><meta name="description" content="Mystic Falls Archive • Mission 001">
+<link rel="manifest" href="manifest.json"><link rel="stylesheet" href="style.css">
+<title>Mystic Falls Archive</title>
+</head>
+<body>
+<div id="app">
+  <div id="intro" class="screen">
+    <div class="sigil">MF</div><div class="eyebrow">MYSTIC FALLS ARCHIVE</div>
+    <h1>AKTA<br><span>001</span></h1>
+    <p class="classified">CLASSIFIED · EYES ONLY</p>
+    <button id="start" class="goldBtn">OTWÓRZ AKTA</button>
+    <small>Nie zamykaj tej strony.</small>
+  </div>
+
+  <div id="main" class="hidden">
+    <header>
+      <div class="brand"><span class="miniSigil">MF</span><div><strong>MYSTIC FALLS ARCHIVE</strong><small>SECURE CHANNEL · CASE 001</small></div></div>
+      <button id="bell" class="iconBtn" aria-label="Powiadomienia">♧</button>
+    </header>
+
+    <section class="casebar"><div><span>SPRAWA</span><b>THE STRANGER</b></div><div class="live"><i></i> LIVE</div></section>
+
+    <main id="chat">
+      <div class="chatHead"><div class="groupIcon">✦</div><div><b>Mystic Falls Investigation</b><small>4 osoby · kanał zabezpieczony</small></div></div>
+      <div id="messages"></div>
+      <div id="typing"></div>
+      <button id="continue" class="continue hidden">KONTYNUUJ <span>→</span></button>
+    </main>
+
+    <section id="archive" class="hidden">
+      <div class="archiveCard"><span>ARCHIVE NOTE</span><h2>Nie wszystko<br>musi zostać znalezione.</h2><p>Czasami wystarczy wiedzieć, dokąd prowadzi kolejny ślad.</p></div>
+    </section>
+
+    <nav><button class="tab active" data-view="chat">💬<span>Czat</span></button><button class="tab" data-view="archive">▣<span>Akta</span></button></nav>
+  </div>
+</div>
+<script src="app.js"></script>
+</body></html>
