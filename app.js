@@ -32,32 +32,32 @@ const locations=[
   ['Damon','To również.'],
   ['Stefan','Trzeci punkt wygląda jak stara kryjówka Eleny.'],
   ['Elena','Jeśli to miejsce rzeczywiście jest powiązane z artefaktem, może znajdziemy tam odpowiedź.'],
-  ['Damon','Żaklin, tym razem sprawa robi się osobista. Bo zaczynamy podejrzewać, że nie zostałaś wybrana przypadkiem.'],
-  ['Elena','Twoja rodzina może być częścią tej historii.'],
-  ['Caroline','I jest jeszcze coś. Sygnał wskazuje na kogoś z Twojego najbliższego otoczenia.'],
-  ['Damon','Nie panikuj. Panika jest moja. Ty masz po prostu znaleźć odpowiedź.'],
-  ['Stefan','Damon...'],
-  ['Damon','Co? Próbuję być motywujący.']
+  ['Damon','Coś tu nadal nie pasuje.'],
+  ['Stefan','Sygnał zatrzymał się dokładnie tam, gdzie kiedyś ukrywaliśmy rzeczy, których nie powinno się znaleźć.'],
+  ['Elena','Może to miejsce ma znaczenie. Albo ktoś chce, żebyśmy tak myśleli.'],
+  ['Caroline','Nie podoba mi się to. Ani trochę.'],
+  ['Damon','Mi też nie. A zwykle lubię, kiedy sytuacja jest interesująca.'],
+  ['Elena','Sprawdźmy to miejsce. Nie wyciągajmy jeszcze żadnych wniosków.']
  ]},
  {title:'Rakoczego 19',address:'Gdańsk, ul. Rakoczego 19',tag:'SYGNAŁ CZWARTY',scene:[
-  ['Damon','Mamy trop. Twój brat może być powiązany z łowcami.'],
-  ['Stefan','Damon, ostrożnie. Nie mamy dowodu.'],
+  ['Damon','Mamy trop. Sygnał prowadzi do kogoś z Twojego najbliższego otoczenia.'],
+  ['Stefan','Damon, ostrożnie. Nie mamy jeszcze dowodu.'],
   ['Damon','Wiem. Ale mam przeczucie. A moje przeczucia mają irytujący zwyczaj bycia trafnymi.'],
-  ['Caroline','Ale mamy coś znacznie gorszego. Artefakt może być właśnie tam.'],
-  ['Elena','Żaklin, musimy sprawdzić Rakoczego 19.'],
-  ['Damon','I tutaj coś mi nie pasuje.'],
-  ['Stefan','Mnie też.'],
-  ['Damon','Sygnał nie powinien zachowywać się w ten sposób. Ktoś go zakłóca.'],
-  ['Caroline','Czekaj... Nie. To jest zbyt uporządkowane.'],
-  ['Elena','To nie artefakt prowadził nas przez całą trasę.'],
-  ['Caroline','To była dywersja.'],
-  ['Damon','Łowcy chcieli, żeby Żaklin opuściła miejsce, w którym była.'],
-  ['Stefan','Jej dom.'],
-  ['Damon','Genialne. Naprawdę ich nie lubię. A to już sporo mówi.']
+  ['Elena','Żaklin, wygląda na to, że Twoja rodzina może być powiązana z tą sprawą.'],
+  ['Caroline','I wszystko wskazuje na Twojego brata.'],
+  ['Damon','Nie panikuj. Panika jest moja. Ty masz po prostu znaleźć odpowiedź.'],
+  ['Stefan','Jeśli artefakt jest przy nim, musimy to sprawdzić.'],
+  ['Elena','Jedźmy na Rakoczego 19. I zachowaj ostrożność.'],
+  ['Damon','Bo jeśli mam rację, ta sprawa właśnie zrobiła się bardzo rodzinna.']
  ]},
  {title:'Romana Wyrobka 9/40',address:'Gdańsk, ul. Romana Wyrobka 9/40',tag:'AKTA KOŃCOWE',scene:[
   ['Elena','Jesteś już w domu? Dobrze. Nie wychodź. Zostań tam, gdzie jesteś.'],
-  ['Caroline','Wszystko zaczyna się zgadzać. To właśnie tutaj zakłócali nasz trop.'],
+  ['Caroline','Czekaj... coś się nie zgadza. Sygnał z Rakoczego był zbyt idealny.'],
+  ['Stefan','Masz rację. Ktoś prowadził nas dokładnie tam, gdzie chciał.'],
+  ['Damon','Czyli cała ta wycieczka była podstępem.'],
+  ['Caroline','Dywersja. Chcieli odciągnąć Żaklin od miejsca, w którym była.'],
+  ['Elena','Od jej domu.'],
+  ['Damon','Genialne. Naprawdę ich nie lubię. A to już sporo mówi.'],
   ['Damon','I teraz czuję coś jeszcze.'],
   ['Stefan','Co?'],
   ['Damon','Zwierzę.'],
@@ -76,14 +76,15 @@ const $=s=>document.querySelector(s);
 function add(person,text){const el=document.createElement('div');el.className='msg';el.innerHTML=`<div class="avatar">${person[0]}</div><div class="bubble"><div class="name">${people[person]}</div><div class="text">${text}</div></div>`;$('#messages').appendChild(el);el.scrollIntoView({behavior:'smooth',block:'end'});}
 function type(person){$('#typing').textContent=`${people[person]} pisze…`;}
 function wait(ms){return new Promise(r=>setTimeout(r,ms));}
-async function play(scene){if(busy)return;busy=true;$('#activate')?.remove();for(const [p,t] of scene){type(p);await wait(700);$('#typing').textContent='';add(p,t);await wait(500);}busy=false;if(current<locations.length-1)$('#continue').classList.remove('hidden');else showFinalInput();}
-function showLocation(i){current=i;const l=locations[i];$('#messages').innerHTML=`<div class="locationCard"><div class="num">${l.tag} · ${String(i+1).padStart(2,'0')}/05</div><h3>${l.title}</h3><p class="address">${l.address}</p><p>Nie aktywuj kolejnego śladu, dopóki nie dotrzesz na miejsce.</p><button id="activate" class="goldBtn">AKTYWUJ ŚLAD →</button></div>`;$('#continue').classList.add('hidden');$('#activate').onclick=()=>play(l.scene);}
-function showFinalInput(){const box=document.createElement('div');box.className='finalInput';box.innerHTML=`<div class="num">IDENTYFIKACJA ARTEFAKTU</div><h3>Co wyczuwają?</h3><p>Biało-czarny, dziwny ptak. Wpisz nazwę.</p><div class="inputRow"><input id="answer" autocomplete="off" placeholder="Wpisz hasło…"><button id="check">SPRAWDŹ</button></div><div id="result"></div>`;$('#messages').appendChild(box);$('#answer').focus();$('#check').onclick=checkAnswer;$('#answer').onkeydown=e=>{if(e.key==='Enter')checkAnswer()};}
+async function play(scene, after){if(busy)return;busy=true;$('#activate')?.remove();for(const [p,t] of scene){type(p);await wait(700);$('#typing').textContent='';add(p,t);await wait(500);}busy=false;if(after)after();}
+function showAddress(i){const l=locations[i];const card=document.createElement('div');card.className='locationCard';card.innerHTML=`<div class="num">${l.tag} · ${String(i+1).padStart(2,'0')}/05</div><h3>${l.title}</h3><p class="address">${l.address}</p><p>To właśnie tutaj prowadzi aktualny sygnał.</p><button id="activate" class="goldBtn">${i===locations.length-1?'JESTEM NA MIEJSCU →':'DOTARŁAM NA MIEJSCE →'}</button>`;$('#messages').appendChild(card);card.scrollIntoView({behavior:'smooth',block:'end'});$('#activate').onclick=()=>{if(i<locations.length-1)showLocation(i+1);else showFinalInput()};}
+function showLocation(i){current=i;busy=false;$('#messages').innerHTML='';$('#typing').textContent='';$('#continue').classList.add('hidden');const l=locations[i];play(l.scene,()=>showAddress(i));}
+function showFinalInput(){const box=document.createElement('div');box.className='finalInput';box.innerHTML=`<div class="num">IDENTYFIKACJA ARTEFAKTU</div><h3>Co wyczuwają?</h3><p>Biało-czarny, dziwny ptak. Wpisz nazwę.</p><div class="inputRow"><input id="answer" autocomplete="off" placeholder="Wpisz hasło…"><button id="check">SPRAWDŹ</button></div><div id="result"></div>`;$('#messages').appendChild(box);box.scrollIntoView({behavior:'smooth',block:'end'});$('#answer').focus();$('#check').onclick=checkAnswer;$('#answer').onkeydown=e=>{if(e.key==='Enter')checkAnswer()};}
 function checkAnswer(){const value=$('#answer').value.trim().toLowerCase().replaceAll('ę','e').replaceAll('ą','a');const ok=value==='pingwin'||value==='pingwinek';const r=$('#result');if(!ok){r.innerHTML='<span class="wrong">Nie. To nie ten trop. Spróbuj jeszcze raz.</span>';return;}r.innerHTML='<span class="right">TO JEST TO.</span>';setTimeout(()=>finish(),500);}
-async function finish(){const box=document.createElement('div');box.className='finale';box.innerHTML=`<div class="seal">MF</div><div class="num">SPRAWA ZAMKNIĘTA</div><h2>Żaklin, uratowałaś nam życie.</h2><p><b>Damon:</b> „Tak. To właśnie to.”</p><p><b>Stefan:</b> „Ukryj to bardzo bezpiecznie. Resztą zajmiemy się my.”</p><p><b>Caroline:</b> „Nie mogliśmy zostawić Cię bez podziękowania.”</p><p><b>Elena:</b> „Spójrz do <b>dużej szafy na przedpokoju</b>. Zostawiliśmy tam mały upominek.”</p><p><b>Damon:</b> „I nie przyzwyczajaj się. Jeśli będzie trzeba… odezwiemy się jeszcze kiedyś.”</p><div class="signature">DAMON SALVATORE<br><span>dla Żaklin</span></div>`;$('#messages').appendChild(box);box.scrollIntoView({behavior:'smooth'});}
+function finish(){const box=document.createElement('div');box.className='finale';box.innerHTML=`<div class="seal">MF</div><div class="num">SPRAWA ZAMKNIĘTA</div><h2>Żaklin, uratowałaś nam życie.</h2><p><b>Damon:</b> „Tak. To właśnie to.”</p><p><b>Stefan:</b> „Ukryj to bardzo bezpiecznie. Resztą zajmiemy się my.”</p><p><b>Caroline:</b> „Nie mogliśmy zostawić Cię bez podziękowania.”</p><p><b>Elena:</b> „Spójrz do <b>dużej szafy na przedpokoju</b>. Zostawiliśmy tam mały upominek.”</p><p><b>Damon:</b> „I nie przyzwyczajaj się. Jeśli będzie trzeba… odezwiemy się jeszcze kiedyś.”</p><div class="signature">DAMON SALVATORE<br><span>dla Żaklin</span></div>`;$('#messages').appendChild(box);box.scrollIntoView({behavior:'smooth',block:'end'});}
 function startArchive(){ const intro=$('#intro'), main=$('#main'); if(!intro||!main)return; intro.classList.add('hidden'); main.classList.remove('hidden'); showLocation(0); }
 document.addEventListener('DOMContentLoaded',()=>{ const btn=$('#start'); if(btn) btn.addEventListener('click',startArchive); });
-$('#continue').onclick=()=>showLocation(current+1);
+document.addEventListener('DOMContentLoaded',()=>{$('#continue').onclick=()=>showLocation(current+1);});
 $('.tab[data-view="archive"]').onclick=()=>{$('#chat').classList.add('hidden');$('#archive').classList.remove('hidden');document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));$('.tab[data-view="archive"]').classList.add('active')};
 $('.tab[data-view="chat"]').onclick=()=>{$('#archive').classList.add('hidden');$('#chat').classList.remove('hidden');document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));$('.tab[data-view="chat"]').classList.add('active')};
 $('#bell').onclick=async()=>{if('Notification'in window){const p=await Notification.requestPermission();if(p==='granted')new Notification('Mystic Falls Archive',{body:'Kanał zabezpieczony. Czekamy na Ciebie.'})}};
