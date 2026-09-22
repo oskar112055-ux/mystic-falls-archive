@@ -51,13 +51,13 @@ const locations=[
   ['Damon','Bo jeśli mam rację, ta sprawa właśnie zrobiła się bardzo rodzinna.']
  ]},
  {title:'Romana Wyrobka 9/40',address:'Gdańsk, ul. Romana Wyrobka 9/40',tag:'AKTA KOŃCOWE',scene:[
-  ['Elena','Jesteś już w domu? Dobrze. Nie wychodź. Zostań tam, gdzie jesteś.'],
   ['Caroline','Czekaj... coś się nie zgadza. Sygnał z Rakoczego był zbyt idealny.'],
   ['Stefan','Masz rację. Ktoś prowadził nas dokładnie tam, gdzie chciał.'],
   ['Damon','Czyli cała ta wycieczka była podstępem.'],
   ['Caroline','Dywersja. Chcieli odciągnąć Żaklin od miejsca, w którym była.'],
   ['Elena','Od jej domu.'],
-  ['Damon','Genialne. Naprawdę ich nie lubię. A to już sporo mówi.'],
+  ['Damon','Genialne. Naprawdę ich nie lubię. A to już sporo mówi.']
+ ],afterAddress:[
   ['Damon','I teraz czuję coś jeszcze.'],
   ['Stefan','Co?'],
   ['Damon','Zwierzę.'],
@@ -77,7 +77,7 @@ function add(person,text){const el=document.createElement('div');el.className='m
 function type(person){$('#typing').textContent=`${people[person]} pisze…`;}
 function wait(ms){return new Promise(r=>setTimeout(r,ms));}
 async function play(scene, after){if(busy)return;busy=true;$('#activate')?.remove();for(const [p,t] of scene){type(p);await wait(700);$('#typing').textContent='';add(p,t);await wait(500);}busy=false;if(after)after();}
-function showAddress(i){const l=locations[i];const card=document.createElement('div');card.className='locationCard';card.innerHTML=`<div class="num">${l.tag} · ${String(i+1).padStart(2,'0')}/05</div><h3>${l.title}</h3><p class="address">${l.address}</p><p>To właśnie tutaj prowadzi aktualny sygnał.</p><button id="activate" class="goldBtn">${i===locations.length-1?'JESTEM NA MIEJSCU →':'DOTARŁAM NA MIEJSCE →'}</button>`;$('#messages').appendChild(card);card.scrollIntoView({behavior:'smooth',block:'end'});$('#activate').onclick=()=>{if(i<locations.length-1)showLocation(i+1);else showFinalInput()};}
+function showAddress(i){const l=locations[i];const card=document.createElement('div');card.className='locationCard';card.innerHTML=`<div class="num">${l.tag} · ${String(i+1).padStart(2,'0')}/05</div><h3>${l.title}</h3><p class="address">${l.address}</p><p>To właśnie tutaj prowadzi aktualny sygnał.</p><button id="activate" class="goldBtn">${i===locations.length-1?'JESTEM NA MIEJSCU →':'DOTARŁAM NA MIEJSCE →'}</button>`;$('#messages').appendChild(card);card.scrollIntoView({behavior:'smooth',block:'end'});$('#activate').onclick=async()=>{if(i<locations.length-1){showLocation(i+1);return;}$('#activate').disabled=true;await play(l.afterAddress||[],()=>showFinalInput());};}
 function showLocation(i){current=i;busy=false;$('#messages').innerHTML='';$('#typing').textContent='';$('#continue').classList.add('hidden');const l=locations[i];play(l.scene,()=>showAddress(i));}
 function showFinalInput(){const box=document.createElement('div');box.className='finalInput';box.innerHTML=`<div class="num">IDENTYFIKACJA ARTEFAKTU</div><h3>Co wyczuwają?</h3><p>Biało-czarny, dziwny ptak. Wpisz nazwę.</p><div class="inputRow"><input id="answer" autocomplete="off" placeholder="Wpisz hasło…"><button id="check">SPRAWDŹ</button></div><div id="result"></div>`;$('#messages').appendChild(box);box.scrollIntoView({behavior:'smooth',block:'end'});$('#answer').focus();$('#check').onclick=checkAnswer;$('#answer').onkeydown=e=>{if(e.key==='Enter')checkAnswer()};}
 function checkAnswer(){const value=$('#answer').value.trim().toLowerCase().replaceAll('ę','e').replaceAll('ą','a');const ok=value==='pingwin'||value==='pingwinek';const r=$('#result');if(!ok){r.innerHTML='<span class="wrong">Nie. To nie ten trop. Spróbuj jeszcze raz.</span>';return;}r.innerHTML='<span class="right">TO JEST TO.</span>';setTimeout(()=>finish(),500);}
